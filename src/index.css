@@ -1,0 +1,11 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-accent: #1d4ed8;
+  --color-accent-soft: #dbeafe;
+  --font-sans: ui-sans-serif, system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+  @apply bg-slate-50 text-slate-900 antialiased;
+}
