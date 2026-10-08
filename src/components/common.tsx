@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils'
 
 export function PageHeader({ title, description, actions }: { title: string; description?: string; actions?: ReactNode }) {
   return (
-    <div className="mb-6 flex flex-wrap items-start justify-between gap-3">
+    <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
         {description && <p className="mt-1 text-sm text-muted-foreground">{description}</p>}
@@ -64,12 +64,12 @@ export function Pick({
 }
 
 export const toneClass = {
-  green: 'border-transparent bg-emerald-100 text-emerald-800',
-  amber: 'border-transparent bg-amber-100 text-amber-800',
-  blue: 'border-transparent bg-blue-100 text-blue-800',
-  red: 'border-transparent bg-red-100 text-red-800',
+  green: 'border-transparent bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-300',
+  amber: 'border-transparent bg-amber-100 text-amber-800 dark:bg-amber-500/20 dark:text-amber-300',
+  blue: 'border-transparent bg-sky-100 text-sky-800 dark:bg-sky-500/20 dark:text-sky-300',
+  red: 'border-transparent bg-red-100 text-red-800 dark:bg-red-500/20 dark:text-red-300',
 }
 
 /** Warna status progress: hijau sehat, kuning mendekati batas, merah overcommit. */
 export const utilTone = (v: number | null) =>
-  v == null ? 'text-muted-foreground' : v > 1 ? 'text-red-600' : v >= 0.75 ? 'text-emerald-600' : 'text-amber-600'
+  v == null ? 'text-muted-foreground' : v > 1 ? 'text-red-600 dark:text-red-400' : v >= 0.75 ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'

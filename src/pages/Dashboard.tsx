@@ -27,7 +27,7 @@ export default function Dashboard() {
   return (
     <>
       <PageHeader title="Dashboard" description={`Performa sprint · ${monthLabel(summary.key)}`} actions={select} />
-      <div className="mb-4 grid grid-cols-2 gap-3 lg:grid-cols-4">
+      <div className="mb-3 grid grid-cols-2 gap-3 lg:grid-cols-4">
         <Kpi label="Utilisasi" icon={Activity} value={pct(summary.utilization)} valueClass={utilTone(summary.utilization)} hint={`${hours(summary.actual)} dari ${hours(summary.capacity)}`} />
         <Kpi label="Completion" icon={CheckCircle2} value={pct(summary.completion)} hint="Estimasi selesai ÷ terencana" />
         <Kpi label="Akurasi estimasi" icon={Target} value={pct(summary.accuracy)} hint="100% = estimasi tepat" />

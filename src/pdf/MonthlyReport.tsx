@@ -2,7 +2,7 @@ import { Document, Page, Rect, StyleSheet, Svg, Text, View } from '@react-pdf/re
 import type { MonthSummary } from '@/lib/metrics'
 import { formatShort, monthLabel } from '@/lib/dates'
 
-const ACCENT = '#1d4ed8'
+const ACCENT = '#15803d'
 const s = StyleSheet.create({
   page: { padding: 40, paddingBottom: 60, fontFamily: 'Helvetica', fontSize: 10, color: '#0f172a' },
   header: { borderBottomWidth: 2, borderBottomColor: ACCENT, paddingBottom: 10, marginBottom: 18 },

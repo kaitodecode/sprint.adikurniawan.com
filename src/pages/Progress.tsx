@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Progress as Bar } from '@/components/ui/progress'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Skeleton } from '@/components/ui/skeleton'
+import { ThemeToggle } from '@/components/ThemeToggle'
 import { formatDate } from '@/lib/dates'
 import { toneClass } from '@/components/common'
 import type { PublicProgress, Status } from '@/lib/types'
@@ -31,7 +32,7 @@ export default function Progress() {
   }, [token])
 
   return (
-    <div className="min-h-screen bg-muted/40 p-4 py-10">
+    <div className="min-h-screen bg-muted/40 p-4 py-8">
       <div className="mx-auto max-w-2xl space-y-4">
         <div className="flex items-center gap-3">
           <div className="flex size-10 items-center justify-center rounded-lg bg-primary text-primary-foreground">
@@ -41,6 +42,7 @@ export default function Progress() {
             <h1 className="text-xl font-semibold leading-tight">Progress pekerjaan</h1>
             {data?.sprint && <p className="text-sm text-muted-foreground">Sprint minggu {formatDate(data.sprint.week_start)}</p>}
           </div>
+          <ThemeToggle className="ml-auto" />
         </div>
 
         {error && (

@@ -15,7 +15,7 @@ const round = (v: number | null) => (v == null ? null : Math.round(v * 1000) / 1
 const utilCfg = { utilization: { label: 'Utilisasi', color: 'var(--chart-1)' } } satisfies ChartConfig
 const trendCfg = {
   utilization: { label: 'Utilisasi', color: 'var(--chart-1)' },
-  completion: { label: 'Completion', color: 'var(--chart-3)' },
+  completion: { label: 'Completion', color: 'var(--chart-2)' },
 } satisfies ChartConfig
 const hoursCfg = { hours: { label: 'Jam aktual', color: 'var(--chart-1)' } } satisfies ChartConfig
 
