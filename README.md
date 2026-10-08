@@ -18,7 +18,7 @@ SPA React + Vite + Tailwind yang memakai Supabase (Postgres, Auth, RLS) langsung
 - Minggu ke-5 dalam satu bulan digabung ke W4 (jawaban untuk pertanyaan terbuka; ubah di `weekOfMonth`, `src/lib/dates.ts`).
 
 ## Deploy
-Hosting statis (`npm run build` → `dist/`). SPA fallback sudah disiapkan: `vercel.json` (Vercel) dan `public/_redirects` (Netlify/Cloudflare Pages). Set kedua env `VITE_*` di dashboard hosting.
+Hosting statis (`npm run build` → `dist/`). SPA fallback sudah disiapkan: `vercel.json` (Vercel), `netlify.toml` (Netlify), dan `wrangler.jsonc` (Cloudflare Workers/Pages; `_redirects` sengaja tidak dipakai karena memicu error "infinite loop"). Set kedua env `VITE_*` di dashboard hosting.
 
 ## Backup
 `.github/workflows/backup.yml` menjalankan `scripts/backup.mjs` tiap minggu dan menyimpan JSON sebagai artifact (90 hari). Set secret repo `SUPABASE_URL` dan `SUPABASE_SERVICE_KEY`.
