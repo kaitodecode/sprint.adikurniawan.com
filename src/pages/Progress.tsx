@@ -1,14 +1,20 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import { CircleCheck, CircleDashed, Loader, Rocket } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
-import { Badge } from '@/components/ui'
+import { Badge } from '@/components/ui/badge'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Progress as Bar } from '@/components/ui/progress'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Skeleton } from '@/components/ui/skeleton'
 import { formatDate } from '@/lib/dates'
+import { toneClass } from '@/components/common'
 import type { PublicProgress, Status } from '@/lib/types'
 
-const labels: Record<Status, [string, 'slate' | 'amber' | 'green']> = {
-  todo: ['Direncanakan', 'slate'],
-  doing: ['Dikerjakan', 'amber'],
-  done: ['Selesai', 'green'],
+const labels: Record<Status, { text: string; tone: keyof typeof toneClass; icon: typeof CircleCheck }> = {
+  todo: { text: 'Direncanakan', tone: 'blue', icon: CircleDashed },
+  doing: { text: 'Dikerjakan', tone: 'amber', icon: Loader },
+  done: { text: 'Selesai', tone: 'green', icon: CircleCheck },
 }
 
 export default function Progress() {
@@ -25,35 +31,65 @@ export default function Progress() {
   }, [token])
 
   return (
-    <div className="mx-auto max-w-2xl p-4 py-10">
-      <h1 className="text-2xl font-semibold">Progress</h1>
-      {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
-      {!data && !error && <p className="mt-4 text-sm text-slate-500">Memuat…</p>}
-      {data && !data.sprint && <p className="mt-4 text-sm text-slate-500">Belum ada sprint berjalan.</p>}
-      {data?.sprint && (
-        <>
-          <p className="text-sm text-slate-500">Sprint minggu {formatDate(data.sprint.week_start)}</p>
-          <div className="mt-6">
-            <div className="mb-1 flex justify-between text-sm font-medium">
-              <span>Selesai</span>
-              <span>{data.percent}%</span>
-            </div>
-            <div className="h-3 overflow-hidden rounded-full bg-slate-200">
-              <div className="h-full bg-accent" style={{ width: `${data.percent}%` }} />
-            </div>
+    <div className="min-h-screen bg-muted/40 p-4 py-10">
+      <div className="mx-auto max-w-2xl space-y-4">
+        <div className="flex items-center gap-3">
+          <div className="flex size-10 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+            <Rocket className="size-5" />
           </div>
-          <ul className="mt-6 divide-y divide-slate-200 rounded-lg border border-slate-200 bg-white">
-            {data.tasks.length === 0 && <li className="p-4 text-sm text-slate-500">Belum ada task publik.</li>}
-            {data.tasks.map((t, i) => (
-              <li key={i} className="flex items-center gap-2 p-3 text-sm">
-                <span className="flex-1">{t.title}</span>
-                {t.tag && <Badge tone="blue">{t.tag}</Badge>}
-                <Badge tone={labels[t.status][1]}>{labels[t.status][0]}</Badge>
-              </li>
-            ))}
-          </ul>
-        </>
-      )}
+          <div>
+            <h1 className="text-xl font-semibold leading-tight">Progress pekerjaan</h1>
+            {data?.sprint && <p className="text-sm text-muted-foreground">Sprint minggu {formatDate(data.sprint.week_start)}</p>}
+          </div>
+        </div>
+
+        {error && (
+          <Alert variant="destructive">
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
+        {!data && !error && <Skeleton className="h-64" />}
+        {data && !data.sprint && <Card><CardContent className="py-8 text-center text-sm text-muted-foreground">Belum ada sprint berjalan.</CardContent></Card>}
+        {data?.sprint && (
+          <>
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-baseline justify-between">
+                  Selesai <span className="text-2xl text-primary">{data.percent}%</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Bar value={data.percent} className="h-3" />
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle>Daftar task</CardTitle>
+                <CardDescription>{data.tasks.length} task ditampilkan.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                {data.tasks.length === 0 ? (
+                  <p className="text-sm text-muted-foreground">Belum ada task publik.</p>
+                ) : (
+                  <ul className="divide-y">
+                    {data.tasks.map((t, i) => {
+                      const l = labels[t.status]
+                      return (
+                        <li key={i} className="flex items-center gap-3 py-2.5 text-sm">
+                          <l.icon className="size-4 shrink-0 text-muted-foreground" />
+                          <span className="flex-1">{t.title}</span>
+                          {t.tag && <Badge variant="secondary">{t.tag}</Badge>}
+                          <Badge className={toneClass[l.tone]}>{l.text}</Badge>
+                        </li>
+                      )
+                    })}
+                  </ul>
+                )}
+              </CardContent>
+            </Card>
+          </>
+        )}
+      </div>
     </div>
   )
 }

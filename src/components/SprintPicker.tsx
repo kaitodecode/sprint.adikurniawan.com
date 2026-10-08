@@ -1,7 +1,7 @@
 import { useSearchParams } from 'react-router-dom'
 import { useData } from '@/lib/data'
 import { formatShort, mondayOf } from '@/lib/dates'
-import { Select } from '@/components/ui'
+import { Pick } from '@/components/common'
 import type { Sprint } from '@/lib/types'
 
 /** Sprint terpilih disimpan di URL (?s=id); default: sprint berjalan, lalu yang terbaru. */
@@ -18,12 +18,11 @@ export function SprintPicker({ value, onChange }: { value?: Sprint; onChange: (i
   const { sprints } = useData()
   if (sprints.length === 0) return null
   return (
-    <Select value={value?.id ?? ''} onChange={(e) => onChange(e.target.value)}>
-      {sprints.map((s) => (
-        <option key={s.id} value={s.id}>
-          {formatShort(s.week_start)} – {s.goal || 'tanpa goal'}
-        </option>
-      ))}
-    </Select>
+    <Pick
+      className="w-[260px]"
+      value={value?.id}
+      onChange={onChange}
+      options={sprints.map((s) => ({ value: s.id, label: `${formatShort(s.week_start)} – ${s.goal || 'tanpa goal'}` }))}
+    />
   )
 }
