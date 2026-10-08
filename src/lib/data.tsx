@@ -16,6 +16,7 @@ interface DataCtx {
   createTask: (t: Partial<Task> & { title: string }) => Promise<void>
   updateTask: (id: string, patch: Partial<Task>) => Promise<void>
   deleteTask: (id: string) => Promise<void>
+  moveTasks: (updates: { id: string; patch: Partial<Task> }[]) => Promise<void>
   carryOver: (sprintId: string) => Promise<number>
   createToken: (token: string, tag: string) => Promise<void>
   deleteToken: (token: string) => Promise<void>
@@ -43,7 +44,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const reload = useCallback(async () => {
     const [s, t, k] = await Promise.all([
       supabase.from('sprints').select('*').order('week_start', { ascending: false }),
-      supabase.from('tasks').select('*').order('created_at'),
+      supabase.from('tasks').select('*').order('position').order('created_at'),
       supabase.from('share_tokens').select('token, tag'),
     ])
     const err = s.error ?? t.error ?? k.error
@@ -84,6 +85,22 @@ export function DataProvider({ children }: { children: ReactNode }) {
       const next = { ...patch }
       if (patch.status) next.done_at = patch.status === 'done' ? new Date().toISOString() : null
       return run(() => supabase.from('tasks').update(next).eq('id', id))
+    },
+    /** Pindah/urutkan banyak task sekaligus; UI diperbarui dulu (optimistic), lalu disimpan. */
+    async moveTasks(updates) {
+      if (updates.length === 0) return
+      const prep = updates.map((u) => ({
+        id: u.id,
+        patch: u.patch.status ? { ...u.patch, done_at: u.patch.status === 'done' ? new Date().toISOString() : null } : u.patch,
+      }))
+      setTasks((prev) => prev.map((t) => {
+        const u = prep.find((x) => x.id === t.id)
+        return u ? { ...t, ...u.patch } : t
+      }))
+      const results = await Promise.all(prep.map((u) => supabase.from('tasks').update(u.patch).eq('id', u.id)))
+      await reload()
+      const failed = results.find((r) => r.error)
+      if (failed?.error) throw new Error(failed.error.message)
     },
     deleteTask: (id) => run(() => supabase.from('tasks').delete().eq('id', id)),
     /** Salin task yang belum selesai ke sprint berikutnya; task asal ditandai carried_over. */

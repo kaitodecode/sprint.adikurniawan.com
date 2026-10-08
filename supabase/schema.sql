@@ -27,6 +27,7 @@ create table if not exists tasks (
   is_stretch boolean not null default false,
   is_public boolean not null default false,
   done_at timestamptz,
+  position double precision not null default 0, -- urutan di kolom board
   carried_over boolean not null default false, -- true di task asal yang disalin ke sprint berikutnya
   carried_from uuid references tasks on delete set null,
   created_at timestamptz not null default now()

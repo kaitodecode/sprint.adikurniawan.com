@@ -17,6 +17,9 @@ SPA React + Vite + Tailwind yang memakai Supabase (Postgres, Auth, RLS) langsung
 - Carry-over: tombol di Riwayat → Retro menyalin task belum selesai ke sprint berikutnya; task asal ditandai `carried_over` sehingga metrik sprint lama tetap utuh.
 - Minggu ke-5 dalam satu bulan digabung ke W4 (jawaban untuk pertanyaan terbuka; ubah di `weekOfMonth`, `src/lib/dates.ts`).
 
+## Migrasi
+Jika `schema.sql` lama sudah dijalankan, jalankan `supabase/migrations/002_task_position.sql` (kolom `position` untuk urutan kartu di Board).
+
 ## Deploy
 Hosting statis (`npm run build` → `dist/`). SPA fallback sudah disiapkan: `vercel.json` (Vercel), `netlify.toml` (Netlify), dan `wrangler.jsonc` (Cloudflare Workers/Pages; `_redirects` sengaja tidak dipakai karena memicu error "infinite loop"). Set kedua env `VITE_*` di dashboard hosting.
 

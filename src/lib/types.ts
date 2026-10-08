@@ -21,6 +21,7 @@ export interface Task {
   is_stretch: boolean
   is_public: boolean
   done_at: string | null
+  position: number
   carried_over: boolean
   carried_from: string | null
   created_at: string
